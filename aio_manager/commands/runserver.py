@@ -26,4 +26,8 @@ class RunServer(Command):
 
     def configure_parser(self, parser):
         super().configure_parser(parser)
+        parser.add_argument('--hostname', metavar='HOST',
+                            help='host or ip to listen on')
+        parser.add_argument('--port', type=int, metavar='PORT',
+                            help='port to listening')
         parser.set_defaults(hostname='127.0.0.1', port=5000)
