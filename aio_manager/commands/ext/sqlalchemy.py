@@ -6,7 +6,6 @@ from colorama import Back, Style, Fore
 from sqlalchemy import event
 
 logger = logging.getLogger(__name__)
-logging.getLogger('aiopg').setLevel(logging.WARNING)
 
 
 class SACommand(Command):
