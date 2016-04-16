@@ -14,7 +14,7 @@ classifiers = [
 
 
 setup(name='aio_manager',
-      version='0.1',
+      version='0.1.1',
       description='Script manager for aiohttp.',
       long_description=('Script manager for aiohttp.\n'
                         'Inspired by Flask-script. Allows to write external scripts. '),
