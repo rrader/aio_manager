@@ -16,7 +16,7 @@ classifiers = [
 setup(name='aio_manager',
       version='0.1',
       description='Script manager for aiohttp.',
-      long_description=('Script manager for aiohttp.'
+      long_description=('Script manager for aiohttp.\n'
                         'Inspired by Flask-script. Allows to write external scripts. '),
       classifiers=classifiers,
       platforms=['POSIX'],
@@ -28,4 +28,5 @@ setup(name='aio_manager',
       install_requires=['aiohttp', 'colorama'],
       extras_require={'sa': ['sqlalchemy>=0.9'], },
       provides=['aio_manager'],
-      include_package_data = True)
+      include_package_data = True,
+      test_suite="tests.test_manager")

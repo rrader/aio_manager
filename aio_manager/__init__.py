@@ -24,6 +24,14 @@ class BaseManager:
             subparser.set_defaults(command=command)
         return base_parser
 
+    def run(self):
+        parser = self.create_parser()
+        parsed = parser.parse_args()
+        if hasattr(parsed, 'command'):
+            parsed.command.execute(parsed)
+        else:
+            parser.print_help()
+
 
 class Manager(BaseManager):
     def __init__(self, app=None):
@@ -32,14 +40,6 @@ class Manager(BaseManager):
 
         from .commands.runserver import RunServer
         self.add_command(RunServer(self.app))
-
-    def run(self):
-        parser = self.create_parser()
-        parsed = parser.parse_args()
-        if hasattr(parsed, 'command'):
-            parsed.command.execute(parsed)
-        else:
-            parser.print_help()
 
 
 class Command(metaclass=abc.ABCMeta):
