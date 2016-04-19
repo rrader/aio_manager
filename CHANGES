@@ -2,6 +2,14 @@ aio_manager Changelog
 ======================
 
 
+Version 0.1.2
+-----------------
+
+Released on April 19, 2016.
+
+  - Shell command added. Works the same way as Flask-Script
+  https://github.com/smurfix/flask-script/blob/master/flask_script/commands.py#L225
+
 Version 0.1.1
 -----------------
 
