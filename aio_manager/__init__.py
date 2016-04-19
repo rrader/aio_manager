@@ -39,7 +39,9 @@ class Manager(BaseManager):
         self.app = app
 
         from .commands.runserver import RunServer
+        from .commands.shell import Shell
         self.add_command(RunServer(self.app))
+        self.add_command(Shell(self.app))
 
 
 class Command(metaclass=abc.ABCMeta):
