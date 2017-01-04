@@ -1,29 +1,50 @@
 import asyncio
 import logging
-from aio_manager import Command
-from aiopg.sa import create_engine
+
 from colorama import Back, Style, Fore
+
 from sqlalchemy import event
+
+create_engine = None
+try:
+    from aiopg.sa import create_engine
+except ImportError:
+    pass
+try:
+    from aiomysql.sa import create_engine
+except ImportError:
+    pass
+
+from aio_manager import Command
 
 logger = logging.getLogger(__name__)
 
 
 class SACommand(Command):
-    def __init__(self, name, app, declarative_base, user, database, host, password):
+    def __init__(self, name, app, declarative_base, user, password, database, host, port, engine_creator=None):
         super().__init__(name, app)
         self.declarative_base = declarative_base
         self.user = user
         self.database = database
         self.host = host
+        self.port = int(port) if port else 3307
         self.password = password
+        self.create_engine = engine_creator or create_engine
+
+        if self.create_engine is None:
+            raise AssertionError(
+                'create_engine must be '
+                'either passed via engine_creator to class constructor '
+                'or one of aiopg/aiomysql should be installed.')
 
     @asyncio.coroutine
     def create_engine(self):
-        engine = yield from create_engine(user=self.user,
-                                          database=self.database,
-                                          host=self.host,
-                                          password=self.password,
-                                          echo=True)
+        engine = yield from self.create_engine(user=self.user,
+                                               password=self.password,
+                                               database=self.database,
+                                               host=self.host,
+                                               port=self.port,
+                                               echo=True)
         return engine
 
 
@@ -76,10 +97,10 @@ class DropTables(SACommand):
         loop.run_until_complete(self.drop_tables())
 
 
-def configure_manager(manager, app, declarative_base, user, database, host, password):
+def configure_manager(manager, app, declarative_base, user, password, database, host, port, engine_creator=None):
     manager.add_command(CreateTables(app, declarative_base,
-                                     user, database,
-                                     host, password))
+                                     user, password, database,
+                                     host, port, engine_creator))
     manager.add_command(DropTables(app, declarative_base,
-                                   user, database,
-                                   host, password))
+                                   user, password, database,
+                                   host, port, engine_creator))
