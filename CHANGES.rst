@@ -1,6 +1,16 @@
 aio_manager Changelog
 ======================
 
+Version 0.2
+-----------------
+
+Released on January 4, 2017.
+
+  - Add support for custom db engines (PR #2 by @webknjaz)
+  - Add support for passing custom db port (PR #2 by @webknjaz)
+  - Add testing against linters via pre-commit tool in Travis CI (PR #2 by @webknjaz)
+  - Add mysql and postgres extras to the package (PR #2 by @webknjaz)
+
 
 Version 0.1.2
 -----------------
