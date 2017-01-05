@@ -5,14 +5,14 @@ from aio_manager import BaseManager, Command
 
 class HelloCommand(Command):
     def run(self, app, args):
-        print("world")
+        print('world')
 
 
 class HelloManager(BaseManager):
     def __init__(self, app):
         super().__init__()
         self.app = app
-        self.add_command(HelloCommand("hello", app))
+        self.add_command(HelloCommand('hello', app))
 
 
 class TestManager(unittest.TestCase):
@@ -29,8 +29,8 @@ class TestManager(unittest.TestCase):
         self.assertIsInstance(manager.commands[0], HelloCommand)
 
         argparser = manager.create_parser()
-        parsed = argparser.parse_args(["hello"])
-        self.assertIn("command", parsed)
+        parsed = argparser.parse_args(['hello'])
+        self.assertIn('command', parsed)
         self.assertIsInstance(parsed.command, HelloCommand)
 
     def test_unknown(self):
@@ -38,7 +38,7 @@ class TestManager(unittest.TestCase):
 
         argparser = manager.create_parser()
         with self.assertRaises(SystemExit):
-            argparser.parse_args(["unknown"])
+            argparser.parse_args(['unknown'])
 
 
 if __name__ == '__main__':

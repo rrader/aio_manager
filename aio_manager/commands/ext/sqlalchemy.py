@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from colorama import Back, Style, Fore
+from colorama import Style, Fore
 
 from sqlalchemy import event
 
@@ -11,11 +11,11 @@ try:
 except ImportError:
     pass
 try:
-    from aiomysql.sa import create_engine
+    from aiomysql.sa import create_engine  # noqa: F811
 except ImportError:
     pass
 
-from aio_manager import Command
+from aio_manager import Command  # noqa: E402
 
 logger = logging.getLogger(__name__)
 

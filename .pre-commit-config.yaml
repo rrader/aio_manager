@@ -8,6 +8,7 @@
   - id: double-quote-string-fixer
   - id: end-of-file-fixer
   - id: name-tests-test
+    args: [--django]
   - id: debug-statements
   - id: check-added-large-files
   - id: check-ast

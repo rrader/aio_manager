@@ -4,7 +4,7 @@ import os
 from aiohttp.web import Application, Response
 
 
-ASSETS_DIR = os.path.join(os.path.dirname(__file__), "static")
+ASSETS_DIR = os.path.join(os.path.dirname(__file__), 'static')
 
 
 def build_application():
@@ -17,4 +17,4 @@ def build_application():
 
 
 async def index(request):
-    return Response(body=b"Hello world from aiohttp app", headers={'Content-type': 'text/html; charset=utf-8'})
+    return Response(body=b'Hello world from aiohttp app', headers={'Content-type': 'text/html; charset=utf-8'})

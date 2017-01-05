@@ -19,5 +19,5 @@ manager = Manager(app)
 #                              settings.DATABASE_PORT[,
 #                              create_engine])
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     manager.run()

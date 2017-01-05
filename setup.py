@@ -12,7 +12,7 @@ classifiers = [
     'Development Status :: 4 - Beta',
 ]
 
-extras_require={'sa': ['sqlalchemy>=0.9']}
+extras_require = {'sa': ['sqlalchemy>=0.9']}
 extras_require['postgres'] = ['aiopg', *extras_require['sa']]
 extras_require['mysql'] = ['aiomysql', *extras_require['sa']]
 
@@ -32,5 +32,5 @@ setup(name='aio_manager',
       install_requires=['aiohttp', 'colorama'],
       extras_require=extras_require,
       provides=['aio_manager'],
-      include_package_data = True,
-      test_suite="tests.test_manager")
+      include_package_data=True,
+      test_suite='tests.test_manager')
