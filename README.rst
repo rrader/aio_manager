@@ -10,9 +10,28 @@
 
 
 Script manager for aiohttp.
+========
+
+Quick Start
+------------------
+
+Install from PYPI:
+
+.. code:: shell
+
+    pip install aio_manager
+
+OR (less popular) via ``setup.py``:
+
+.. code:: shell
+
+    python -m setup install
 
 Example
-=======
+------------------
+
+.. code:: yaml
+   :number-lines:
 
     app = build_application()
     manager = Manager(app)
