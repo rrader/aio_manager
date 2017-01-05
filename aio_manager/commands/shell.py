@@ -1,6 +1,4 @@
 import code
-import logging
-import asyncio
 import os
 
 from aio_manager import Command
@@ -68,18 +66,18 @@ class Shell(Command):
     def configure_parser(self, parser):
         super().configure_parser(parser)
         parser.add_argument('--no-ipython',
-               action="store_true",
-               dest='no_ipython',
-               help="Do not use the IPython shell")
+                            action='store_true',
+                            dest='no_ipython',
+                            help='Do not use the IPython shell')
         parser.add_argument('--no-bpython',
-               action="store_true",
-               dest='no_bpython',
-               help="Do not use the BPython shell")
+                            action='store_true',
+                            dest='no_bpython',
+                            help='Do not use the BPython shell')
         parser.add_argument('--no-ptipython',
-               action="store_true",
-               dest='no_ptipython',
-               help="Do not use the PtIPython shell")
+                            action='store_true',
+                            dest='no_ptipython',
+                            help='Do not use the PtIPython shell')
         parser.add_argument('--no-ptpython',
-               action="store_true",
-               dest='no_ptpython',
-               help="Do not use the PtPython shell")
+                            action='store_true',
+                            dest='no_ptpython',
+                            help='Do not use the PtPython shell')
