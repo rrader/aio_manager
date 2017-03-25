@@ -1,7 +1,16 @@
 aio_manager Changelog
 ======================
 
-Version 0.2
+Version 1.0.1
+-----------------
+Released on March 25, 2017.
+
+  - Fix create_engine usage (PR #5 by @webknjaz)
+  - Fix create_engine dbname arg diversity (PR #5 by @webknjaz)
+  - Enable unit tests in TravisCI (PR #5 by @webknjaz)
+
+
+Version 1.0.0
 -----------------
 
 Released on January 4, 2017.

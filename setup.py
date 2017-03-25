@@ -5,7 +5,6 @@ classifiers = [
     'License :: OSI Approved :: BSD License',
     'Intended Audience :: Developers',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Environment :: Web Environment',
@@ -18,7 +17,7 @@ extras_require['mysql'] = ['aiomysql', *extras_require['sa']]
 
 
 setup(name='aio_manager',
-      version='1.0.0',
+      version='1.0.1',
       description='Script manager for aiohttp.',
       long_description=('Script manager for aiohttp.\n'
                         'Inspired by Flask-script. Allows to write external scripts. '),

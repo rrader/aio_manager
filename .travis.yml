@@ -2,10 +2,12 @@ language: python
 python:
 - 3.5
 - 3.6
+- 3.6-dev
 - nightly
 matrix:
   fast_finish: true
   allow_failures:
+  - python: 3.6-dev
   - python: nightly
   include:
   - python: 3.6
@@ -22,7 +24,7 @@ script: |
   then
     pre-commit run --all-files
   else
-    echo No tests set up
+    python -m unittest discover -s tests -vv
   fi
 deploy:
   provider: pypi

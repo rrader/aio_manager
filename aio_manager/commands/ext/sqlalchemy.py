@@ -5,13 +5,19 @@ from colorama import Style, Fore
 
 from sqlalchemy import event
 
-create_engine = None
+_default_create_engine = None
+DEFAULT_PORT = None
+_DB_ARG_NAME = 'database'
 try:
-    from aiopg.sa import create_engine
+    from aiopg.sa import create_engine as _default_create_engine
+    DEFAULT_PORT = 5432
+    _DB_ARG_NAME = 'dbname'  # 'database' is deprecated
 except ImportError:
     pass
 try:
-    from aiomysql.sa import create_engine  # noqa: F811
+    from aiomysql.sa import create_engine as _default_create_engine  # noqa: F811
+    DEFAULT_PORT = 3306
+    _DB_ARG_NAME = 'db'
 except ImportError:
     pass
 
@@ -29,9 +35,9 @@ class SACommand(Command):
         self.host = host
         self.port = int(port) if port else 3307
         self.password = password
-        self.create_engine = engine_creator or create_engine
+        self._create_engine = engine_creator or _default_create_engine
 
-        if self.create_engine is None:
+        if self._create_engine is None:
             raise AssertionError(
                 'create_engine must be '
                 'either passed via engine_creator to class constructor '
@@ -39,13 +45,16 @@ class SACommand(Command):
 
     @asyncio.coroutine
     def create_engine(self):
-        engine = yield from self.create_engine(user=self.user,
-                                               password=self.password,
-                                               database=self.database,
-                                               host=self.host,
-                                               port=self.port,
-                                               echo=True)
-        return engine
+        return (
+            yield from self._create_engine(
+                user=self.user,
+                password=self.password,
+                host=self.host,
+                port=self.port,
+                echo=True,
+                **{_DB_ARG_NAME: self.database}  # handle different backends
+            )
+        )
 
 
 class CreateTables(SACommand):
