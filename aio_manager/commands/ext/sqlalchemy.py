@@ -29,9 +29,9 @@ class SACommand(Command):
         self.host = host
         self.port = int(port) if port else 3307
         self.password = password
-        self.create_engine = engine_creator or create_engine
+        self._create_engine = engine_creator or create_engine
 
-        if self.create_engine is None:
+        if self._create_engine is None:
             raise AssertionError(
                 'create_engine must be '
                 'either passed via engine_creator to class constructor '
@@ -39,13 +39,16 @@ class SACommand(Command):
 
     @asyncio.coroutine
     def create_engine(self):
-        engine = yield from self.create_engine(user=self.user,
-                                               password=self.password,
-                                               database=self.database,
-                                               host=self.host,
-                                               port=self.port,
-                                               echo=True)
-        return engine
+        return (
+            yield from self._create_engine(
+                user=self.user,
+                password=self.password,
+                database=self.database,
+                host=self.host,
+                port=self.port,
+                echo=True
+            )
+        )
 
 
 class CreateTables(SACommand):
