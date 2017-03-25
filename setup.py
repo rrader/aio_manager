@@ -17,7 +17,7 @@ extras_require['mysql'] = ['aiomysql', *extras_require['sa']]
 
 
 setup(name='aio_manager',
-      version='1.0.0',
+      version='1.0.1',
       description='Script manager for aiohttp.',
       long_description=('Script manager for aiohttp.\n'
                         'Inspired by Flask-script. Allows to write external scripts. '),
