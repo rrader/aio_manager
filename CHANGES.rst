@@ -1,6 +1,12 @@
 aio_manager Changelog
 ======================
 
+Version 1.0.2 (unreleased)
+-----------------
+Released on {{date_here}}.
+
+  - Fix internal create_engine event handler naming (PR #6 by @webknjaz)
+
 Version 1.0.1
 -----------------
 Released on March 25, 2017.
