@@ -43,10 +43,9 @@ class SACommand(Command):
                 'either passed via engine_creator to class constructor '
                 'or one of aiopg/aiomysql should be installed.')
 
-    @asyncio.coroutine
-    def create_engine(self):
+    async def create_engine(self):
         return (
-            yield from self._create_engine(
+            await self._create_engine(
                 user=self.user,
                 password=self.password,
                 host=self.host,
@@ -65,8 +64,7 @@ class CreateTables(SACommand):
     def __init__(self, *args, **kwargs):
         super().__init__('init', *args, **kwargs)
 
-    @asyncio.coroutine
-    def create_tables(self):
+    async def create_tables(self):
         def receive_after_create(target, connection, **kw):
             print('  ' + target.name + Fore.GREEN + ' created ' + Style.RESET_ALL)
 
@@ -74,8 +72,8 @@ class CreateTables(SACommand):
             event.listen(table, 'after_create', receive_after_create)
 
         print(Fore.GREEN + 'Creating all tables' + Style.RESET_ALL)
-        engine = yield from self.create_engine()
-        yield from self.declarative_base.metadata.create_all(engine)
+        engine = await self.create_engine()
+        await self.declarative_base.metadata.create_all(engine)
 
     def run(self, app, args):
         loop = asyncio.get_event_loop()
@@ -89,8 +87,7 @@ class DropTables(SACommand):
     def __init__(self, *args, **kwargs):
         super().__init__('drop_tables', *args, **kwargs)
 
-    @asyncio.coroutine
-    def drop_tables(self):
+    async def drop_tables(self):
         def receive_after_drop(target, connection, **kw):
             print('  ' + target.name + Fore.RED + ' dropped ' + Style.RESET_ALL)
 
@@ -98,8 +95,8 @@ class DropTables(SACommand):
             event.listen(table, 'after_drop', receive_after_drop)
 
         print(Fore.RED + 'Dropping all tables' + Style.RESET_ALL)
-        engine = yield from self.create_engine()
-        yield from self.declarative_base.metadata.drop_all(engine)
+        engine = await self.create_engine()
+        await self.declarative_base.metadata.drop_all(engine)
 
     def run(self, app, args):
         loop = asyncio.get_event_loop()

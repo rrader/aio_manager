@@ -10,10 +10,9 @@ class RunServer(Command):
     def __init__(self, app):
         super().__init__('run_server', app)
 
-    @asyncio.coroutine
-    def run_server(self, app, loop, host, port):
+    async def run_server(self, app, loop, host, port):
         handler = app.make_handler()
-        srv = yield from loop.create_server(handler, host, port)
+        srv = await loop.create_server(handler, host, port)
         logging.getLogger().info('Server started at http://{}:{}'.format(host, port))
         return srv, handler
 
