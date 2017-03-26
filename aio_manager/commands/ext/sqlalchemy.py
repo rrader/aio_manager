@@ -67,11 +67,11 @@ class CreateTables(SACommand):
 
     @asyncio.coroutine
     def create_tables(self):
-        def receive_after_drop(target, connection, **kw):
+        def receive_after_create(target, connection, **kw):
             print('  ' + target.name + Fore.GREEN + ' created ' + Style.RESET_ALL)
 
         for name, table in self.declarative_base.metadata.tables.items():
-            event.listen(table, 'after_create', receive_after_drop)
+            event.listen(table, 'after_create', receive_after_create)
 
         print(Fore.GREEN + 'Creating all tables' + Style.RESET_ALL)
         engine = yield from self.create_engine()
