@@ -1,9 +1,14 @@
 aio_manager Changelog
 ======================
 
-Version 1.0.2 (unreleased)
+Version 2.0.0 (unreleased)
 -----------------
 Released on {{date_here}}.
+
+  - Make SQLAlchemy interaction synchronous (PR #8 by @webknjaz)
+
+Version 1.0.2 (unreleased)
+-----------------
 
   - Fix internal create_engine event handler naming (PR #6 by @webknjaz)
 
