@@ -12,8 +12,8 @@ classifiers = [
 ]
 
 extras_require = {'sa': ['sqlalchemy>=0.9']}
-extras_require['postgres'] = ['aiopg', *extras_require['sa']]
-extras_require['mysql'] = ['aiomysql', *extras_require['sa']]
+extras_require['postgres'] = ['psycopg2>=2.5.2', *extras_require['sa']]
+extras_require['mysql'] = ['PyMySQL>=0.7.5', *extras_require['sa']]
 
 
 setup(name='aio_manager',
