@@ -17,7 +17,7 @@ extras_require['mysql'] = ['aiomysql', *extras_require['sa']]
 
 
 setup(name='aio_manager',
-      version='2.0.0',
+      use_scm_version=True,
       description='Script manager for aiohttp.',
       long_description=('Script manager for aiohttp.\n'
                         'Inspired by Flask-script. Allows to write external scripts. '),
@@ -30,6 +30,7 @@ setup(name='aio_manager',
       packages=find_packages(),
       install_requires=['aiohttp', 'colorama'],
       extras_require=extras_require,
+      setup_requires=['setuptools_scm'],
       provides=['aio_manager'],
       include_package_data=True,
       test_suite='tests.test_manager')
