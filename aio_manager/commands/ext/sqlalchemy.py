@@ -1,25 +1,9 @@
-import asyncio
 import logging
 
 from colorama import Style, Fore
 
 from sqlalchemy import event
-
-_default_create_engine = None
-DEFAULT_PORT = None
-_DB_ARG_NAME = 'database'
-try:
-    from aiopg.sa import create_engine as _default_create_engine
-    DEFAULT_PORT = 5432
-    _DB_ARG_NAME = 'dbname'  # 'database' is deprecated
-except ImportError:
-    pass
-try:
-    from aiomysql.sa import create_engine as _default_create_engine  # noqa: F811
-    DEFAULT_PORT = 3306
-    _DB_ARG_NAME = 'db'
-except ImportError:
-    pass
+from sqlalchemy.engine import engine_from_config
 
 from aio_manager import Command  # noqa: E402
 
@@ -27,89 +11,76 @@ logger = logging.getLogger(__name__)
 
 
 class SACommand(Command):
-    def __init__(self, name, app, declarative_base, user, password, database, host, port, engine_creator=None):
-        super().__init__(name, app)
-        self.declarative_base = declarative_base
-        self.user = user
-        self.database = database
-        self.host = host
-        self.port = int(port) if port else 3307
-        self.password = password
-        self._create_engine = engine_creator or _default_create_engine
+    cmd_name = None
+    cmd_action = None
+    cmd_action_desc = None
+    sql_event = None
+    sql_action_callable = None
 
-        if self._create_engine is None:
-            raise AssertionError(
-                'create_engine must be '
-                'either passed via engine_creator to class constructor '
-                'or one of aiopg/aiomysql should be installed.')
-
-    @asyncio.coroutine
-    def create_engine(self):
-        return (
-            yield from self._create_engine(
-                user=self.user,
-                password=self.password,
-                host=self.host,
-                port=self.port,
-                echo=True,
-                **{_DB_ARG_NAME: self.database}  # handle different backends
+    def __init__(self, app, declarative_base, url):
+        if not (self.cmd_name and self.cmd_action and
+                self.cmd_action_desc and self.sql_event):
+            raise NotImplementedError(
+                'Programmer error: '
+                'cmd_name string must be set and represent CLI command name; '
+                'cmd_action string must be set and represent command action; '
+                'cmd_action_desc string must be set and describe command action; '
+                'sql_event string must be set and be sqlalchemy.event; '
+                "sql_action_callable string must be set and be metadata's method."
             )
+
+        super().__init__(self.cmd_name, app)
+        self._db_url = url
+        self._declarative_base = declarative_base
+
+        if self._db_url is None:
+            raise AssertionError(
+                'db_url must be '
+                'passed via url to class constructor.'
+            )
+
+    def create_engine(self):
+        return engine_from_config(
+            {'url': self._db_url, 'pool_recycle': 60},
+            prefix=''
         )
+
+    def __get_sql_callable(self):
+        return getattr(self._declarative_base.metadata, self.sql_action_callable)
+
+    def __receive_after_event(self, target, connection, **kw):
+        print('  ' + target.name + Fore.GREEN + ' ' + self.cmd_action + ' ' + Style.RESET_ALL)
+
+    def _sql_action(self):
+        for name, table in self._declarative_base.metadata.tables.items():
+            event.listen(table, self.sql_event, self.__receive_after_event)
+
+        print(Fore.GREEN + self.cmd_action_desc + Style.RESET_ALL)
+        engine = self.create_engine()
+        self.__get_sql_callable()(engine)
+
+    def run(self, app, args):
+        self._sql_action()
 
 
 class CreateTables(SACommand):
-    """
-    Creates DB tables for all models
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__('init', *args, **kwargs)
-
-    @asyncio.coroutine
-    def create_tables(self):
-        def receive_after_drop(target, connection, **kw):
-            print('  ' + target.name + Fore.GREEN + ' created ' + Style.RESET_ALL)
-
-        for name, table in self.declarative_base.metadata.tables.items():
-            event.listen(table, 'after_create', receive_after_drop)
-
-        print(Fore.GREEN + 'Creating all tables' + Style.RESET_ALL)
-        engine = yield from self.create_engine()
-        yield from self.declarative_base.metadata.create_all(engine)
-
-    def run(self, app, args):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.create_tables())
+    """Creates DB tables for all models."""
+    cmd_name = 'create_tables'
+    cmd_action = 'created'
+    cmd_action_desc = 'Creating all tables'
+    sql_event = 'after_create'
+    sql_action_callable = 'create_all'
 
 
 class DropTables(SACommand):
-    """
-    Drops DB tables for all models
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__('drop_tables', *args, **kwargs)
-
-    @asyncio.coroutine
-    def drop_tables(self):
-        def receive_after_drop(target, connection, **kw):
-            print('  ' + target.name + Fore.RED + ' dropped ' + Style.RESET_ALL)
-
-        for name, table in self.declarative_base.metadata.tables.items():
-            event.listen(table, 'after_drop', receive_after_drop)
-
-        print(Fore.RED + 'Dropping all tables' + Style.RESET_ALL)
-        engine = yield from self.create_engine()
-        yield from self.declarative_base.metadata.drop_all(engine)
-
-    def run(self, app, args):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.drop_tables())
+    """Drops DB tables for all models."""
+    cmd_name = 'drop_tables'
+    cmd_action = 'dropped'
+    cmd_action_desc = 'Dropping all tables'
+    sql_event = 'after_drop'
+    sql_action_callable = 'drop_all'
 
 
-def configure_manager(manager, app, declarative_base, user, password, database, host, port, engine_creator=None):
-    manager.add_command(CreateTables(app, declarative_base,
-                                     user, password, database,
-                                     host, port, engine_creator))
-    manager.add_command(DropTables(app, declarative_base,
-                                   user, password, database,
-                                   host, port, engine_creator))
+def configure_manager(manager, app, declarative_base, url):
+    manager.add_command(CreateTables(app, declarative_base, url=url))
+    manager.add_command(DropTables(app, declarative_base, url=url))
