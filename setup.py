@@ -23,8 +23,6 @@ __name__ == '__main__' and setup(
     name='aio_manager',
     use_scm_version=True,
     description='Script manager for aiohttp.',
-    long_description=('Script manager for aiohttp.\n'
-                      'Inspired by Flask-script. Allows to write external scripts. '),
     classifiers=classifiers,
     platforms=['POSIX'],
     author='Roman Rader',
