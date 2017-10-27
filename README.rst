@@ -21,6 +21,13 @@ Install from PYPI:
 
     pip install aio_manager
 
+For optional features, feel free to depend on extras:
+
+.. code:: shell
+
+    pip install aio_manager[mysql,postgres]
+    pip install aio_manager[sa]
+
 OR (less popular) via ``setup.py``:
 
 .. code:: shell
