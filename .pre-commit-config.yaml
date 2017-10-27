@@ -27,11 +27,6 @@ repos:
   - id: detect-private-key
   - id: requirements-txt-fixer
 
-# - repo: git://github.com/FalconSocial/pre-commit-mirrors-pep257
-#   sha: f464d46
-#   hooks:
-#   - id: pep257
-
 - repo: git://github.com/Lucas-C/pre-commit-hooks
   sha: v1.1.1
   hooks:

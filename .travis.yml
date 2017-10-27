@@ -17,16 +17,29 @@ install:
 script:
 - python -m unittest discover -s tests -vv
 
+_helpers:
+- &lint_job_base
+  stage: &lint_stage_name lint
+  python: *mainstream_python
+  install:
+  - pip install pre-commit
+  script:
+  - pre-commit run --all-files
+
 jobs:
   fast_finish: true
+  allow_failures:
+  - env:
+    - &pre_commit_env PRE_COMMIT_PEP257=true
 
   include:
-  - stage: &lint_stage_name lint
-    python: *mainstream_python
-    install:
-    - pip install pre-commit
+  - <<: *lint_job_base
+
+  - <<: *lint_job_base
+    env:
+    - *pre_commit_env
     script:
-    - pre-commit run --all-files
+    - pre-commit run --all-files --config .pre-commit-config.yaml.pep257
 
   - stage: &deploy_stage_name deploy
     python: *mainstream_python
