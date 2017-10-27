@@ -6,8 +6,6 @@
 
 .. image:: https://img.shields.io/pypi/pyversions/aio_manager.svg
 
-.. image:: https://img.shields.io/pypi/dm/aio_manager.svg
-
 
 Script manager for aiohttp.
 ========
