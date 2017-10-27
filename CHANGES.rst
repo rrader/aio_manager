@@ -1,14 +1,27 @@
 aio_manager Changelog
 ======================
 
-Version 2.0.0 (unreleased)
+Version 2.0.2.dev0 (unreleased)
 -----------------
 Released on {{date_here}}.
 
+Version 2.0.1
+-----------------
+Released on October 27, 2017.
+
+  - Fix integration with aiohttp>=2.3
+  - Upgrade pre-commit linting-related stuff
+  - Add CI pipelines
+
+Version 2.0.0
+-----------------
+Released on March 29, 2017.
+
   - Make SQLAlchemy interaction synchronous (PR #8 by @webknjaz)
 
-Version 1.0.2 (unreleased)
+Version 1.0.2
 -----------------
+Released on March 28, 2017.
 
   - Fix internal create_engine event handler naming (PR #6 by @webknjaz)
 
