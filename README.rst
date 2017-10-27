@@ -37,7 +37,7 @@ OR (less popular) via ``setup.py``:
 Example
 ------------------
 
-.. code:: yaml
+.. code:: python
    :number-lines:
 
     app = build_application()
