@@ -1,9 +1,15 @@
 aio_manager Changelog
 ======================
 
-Version 2.0.3.dev0 (unreleased)
+Version 2.0.4.dev0 (unreleased)
 -----------------
 Released on {{date_here}}.
+
+Version 2.0.3
+-----------------
+Released on October 27, 2017.
+
+  - Fix ``setup.py`` overriding ``long_description``
 
 Version 2.0.2
 -----------------
