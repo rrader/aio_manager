@@ -25,7 +25,20 @@ class RunServer(Command):
         try:
             loop.run_forever()
         except KeyboardInterrupt:
-            loop.run_until_complete(handler.finish_connections())
+            try:
+                """
+                ``finish_connection()`` is deprecated since aiohttp v1.2
+                It's fully removed from aiohttp >= v2.3:
+                https://github.com/aio-libs/aiohttp/pull/2006
+                """
+                shutdown_coro = handler.finish_connections()
+            except AttributeError:
+                """
+                ``finish_connection()`` is an alias
+                for ``shutdown()`` in aiohttp >=1.2,<2.3.
+                """
+                shutdown_coro = handler.shutdown()
+            loop.run_until_complete(shutdown_coro)
 
     def configure_parser(self, parser):
         super().configure_parser(parser)
