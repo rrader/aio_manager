@@ -1,9 +1,15 @@
 aio_manager Changelog
 ======================
 
-Version 2.0.2.dev0 (unreleased)
+Version 2.0.3.dev0 (unreleased)
 -----------------
 Released on {{date_here}}.
+
+Version 2.0.2
+-----------------
+Released on October 27, 2017.
+
+  - Publish ``README.rst`` as a ``long_description`` to PYPI
 
 Version 2.0.1
 -----------------
